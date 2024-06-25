@@ -1,4 +1,4 @@
-# Backend Challenge [![CircleCI]()]() [![Scrutinizer Code Quality]()]()
+# Backend Challenge [![CircleCI](https://dl.circleci.com/status-badge/img/circleci/SdtpWkQEvBq7VADRHZsRm/HoQr7zpC4VGreQDKm3EnxX/tree/main.svg?style=svg)](https://app.circleci.com/pipelines/circleci/SdtpWkQEvBq7VADRHZsRm/HoQr7zpC4VGreQDKm3EnxX?branch=main) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/dhannyell/kanastra-challenge/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/dhannyell/kanastra-challenge/?branch=main)
 
 Hiring Challenge (Soft. Engineers Backend) - Take Home
 
