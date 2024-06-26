@@ -3,11 +3,11 @@ checks:
         code_rating: true
         duplicate_code: true
 filter:
-    paths: ["pyof/*", "tests/*"]
+    paths: ["pyof/*", "test/*"]
 build:
     environment:
         python: 3.12
-        postgresql: false
+        postgresql: True
         redis: false
     dependencies:
         override:
@@ -16,10 +16,4 @@ build:
         before:
             - pip install coverage
         override:
-            -
-                command: 'tox'
-                coverage:
-                    file: '.coverage'
-                    config_file: '.coveragerc'
-                    format: 'py-cc'
             - py-scrutinizer-run

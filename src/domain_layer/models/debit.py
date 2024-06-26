@@ -1,6 +1,6 @@
-from dataclasses import dataclass
 from datetime import date, datetime
 
+from dataclasses import dataclass
 from pandas import DataFrame
 
 from domain_layer.abstract.debit import DebitRepository
@@ -17,9 +17,5 @@ class Debit:
     inserted_at: datetime
 
     @classmethod
-    def insert_debits(
-        self, 
-        dataframe: DataFrame,
-        using_repository: DebitRepository
-    ):
+    def insert_debits(self, dataframe: DataFrame, using_repository: DebitRepository):
         return using_repository.insert_debits(dataframe)

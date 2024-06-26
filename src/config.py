@@ -1,9 +1,11 @@
 import logging
 import os
-from dotenv import load_dotenv, find_dotenv
+
+from dotenv import load_dotenv
 
 load_dotenv()
 basedir = os.path.abspath(os.path.dirname(__file__))
+
 
 class BaseConfig(object):
     DEPLOY_ENV = os.environ.get("DEPLOY_ENV", "Development")
@@ -23,7 +25,10 @@ class BaseConfig(object):
         "port": os.getenv("APPLICATION_POSTGRES_PORT", 5432),
         "db": os.getenv("APPLICATION_POSTGRES_DB", "postgres"),
     }
-    SQLALCHEMY_DATABASE_URI = "postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s" % POSTGRES
+    SQLALCHEMY_DATABASE_URI = (
+        "postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s" % POSTGRES
+    )
+
 
 class TestingConfig(BaseConfig):
     DEBUG = "TESTING"
@@ -43,17 +48,23 @@ class TestingConfig(BaseConfig):
         "port": os.getenv("APPLICATION_POSTGRES_PORT", 5433),
         "db": os.getenv("APPLICATION_POSTGRES_DB", "postgres"),
     }
-    SQLALCHEMY_DATABASE_URI = "postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s" % POSTGRES
+    SQLALCHEMY_DATABASE_URI = (
+        "postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s" % POSTGRES
+    )
+
 
 class StagingConfig(BaseConfig):
     pass
 
+
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
 
+
 class ProductionConfig(BaseConfig):
-    LOGS_LEVEL = int(os.environ.get("LOG_LEVEL",logging.INFO))
-     
+    LOGS_LEVEL = int(os.environ.get("LOG_LEVEL", logging.INFO))
+
+
 logging.basicConfig(
     filename=os.getenv("SERVICE_LOG", "server.log"),
     level=logging.DEBUG,
