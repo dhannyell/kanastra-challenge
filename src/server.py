@@ -1,45 +1,62 @@
+import os
+import logging
+import sys
+
 from flasgger import Swagger
 from flask import Flask
 from flask.blueprints import Blueprint
+from flask_cors import CORS
 
-import config
-import routes
-from models import db
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 
-# config your API specs
-# you can define multiple specs in the case your api has multiple versions
-# ommit configs to get the default (all views exposed in /spec url)
-# rule_filter is a callable that receives "Rule" object and
-#   returns a boolean to filter in only desired views
+import presentation_layer.views as views
 
-server = Flask(__name__)
+ENV = os.environ.get('DEPLOY_ENV', 'Development')
 
-server.config["SWAGGER"] = {
-    "swagger_version": "2.0",
-    "title": "Application",
-    "specs": [
-        {
-            "version": "0.0.1",
-            "title": "Application",
-            "endpoint": "spec",
-            "route": "/application/spec",
-            "rule_filter": lambda rule: True,  # all in
-        }
-    ],
-    "static_url_path": "/apidocs",
-}
+def create_app(deploy_env: str = ENV) -> Flask:
+    server = Flask(__name__)
+    
+    CORS(server)
+    server.config.from_object('src.config.{}Config'.format(deploy_env))
+    db = SQLAlchemy(server)
 
-Swagger(server)
+    server.db = db
 
-server.debug = config.DEBUG
-server.config["SQLALCHEMY_DATABASE_URI"] = config.DB_URI
-server.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = config.SQLALCHEMY_TRACK_MODIFICATIONS
-db.init_app(server)
-db.app = server
+    server.config["SWAGGER"] = {
+        "swagger_version": "3.0.2",
+        "title": "Application",
+        "specs": [
+            {
+                "version": "0.0.1",
+                "title": "Application",
+                "endpoint": "spec",
+                "route": "/application/spec",
+                "rule_filter": lambda rule: True,  # all in
+            }
+        ],
+        "static_url_path": "/apidocs",
+    }
 
-for blueprint in vars(routes).values():
-    if isinstance(blueprint, Blueprint):
-        server.register_blueprint(blueprint, url_prefix=config.APPLICATION_ROOT)
+    server.config['SWAGGER']['openapi'] = '3.0.2'
 
-if __name__ == "__main__":
-    server.run(host=config.HOST, port=config.PORT)
+    Swagger(server)
+
+    _register_bluerints(server)
+    _configure_logger(server)
+
+    Migrate(server,db)
+
+    return server
+
+def _register_bluerints(server:Flask):
+    for blueprint in vars(views).values():
+        if isinstance(blueprint, Blueprint):
+            server.register_blueprint(blueprint)
+
+
+def _configure_logger(server:Flask):
+    logger = logging.getLogger("Kanastra")
+    logger.setLevel(server.config["LOGS_LEVEL"])
+    logger.addHandler(logging.StreamHandler(sys.stdout))
+

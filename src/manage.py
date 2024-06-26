@@ -1,18 +1,24 @@
 from flask import Flask
-from flask_migrate import Migrate, MigrateCommand
-from flask_script import Manager
+from flask_migrate import Migrate
+from flask.cli import FlaskGroup
+from flask import current_app as app
 
 import config
-from models import db
 
 server = Flask(__name__)
-server.debug = config.DEBUG
-server.config["SQLALCHEMY_DATABASE_URI"] = config.DB_URI
-db.init_app(server)
+server.config["SQLALCHEMY_DATABASE_URI"] = config.BaseConfig.SQLALCHEMY_DATABASE_URI
+cli = FlaskGroup(server)
 
-migrate = Migrate(server, db)
-manager = Manager(server)
-manager.add_command("db", MigrateCommand)
+@cli.command("initialize_table")
+def create_db():
+    app.db.drop_all()
+    app.db.dbdb.create_all()
+    app.db.session.commit()
+
+@cli.command("migrate")
+def migrate():
+    migrate = Migrate(server, app.db)
+    migrate.init_app(server, app.db)
 
 if __name__ == "__main__":
-    manager.run()
+    cli()
