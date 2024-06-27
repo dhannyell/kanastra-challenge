@@ -12,7 +12,7 @@ from util.verify_header import validate_header
 logger = logging.getLogger("Debit.")
 
 VERSION = "1.0"
-DOC = "Debit API"
+DOC = "API Kanastra"
 
 debit_bp = Blueprint("api", __name__, url_prefix="/api")
 

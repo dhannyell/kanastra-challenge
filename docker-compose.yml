@@ -8,9 +8,30 @@ services:
       - .:/mnt
     depends_on:
       - db
+      - redis
     ports:
       - 3000:3000
     command: python -m flask run -p 3000 --host=0.0.0.0 --reload --debug
+
+  redis:
+    image: redis:latest
+    environment:
+      FLASK_APP: src/server
+    volumes:
+      - .:/src
+    ports:
+      - 6379:6379
+
+  celery:
+    build:
+        context: .
+    environment:
+      FLASK_APP: src/server
+    volumes:
+      - .:/src
+    command: celery -A run.celery worker --loglevel=info
+    depends_on:
+      - redis
 
   dbdata:
     image: busybox

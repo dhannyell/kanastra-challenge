@@ -13,7 +13,7 @@ cli = FlaskGroup(server)
 @cli.command("initialize_table")
 def create_db():
     app.db.drop_all()
-    app.db.dbdb.create_all()
+    app.db.create_all()
     app.db.session.commit()
 
 

@@ -16,11 +16,12 @@ class BaseConfig(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     FLASK_APP = os.environ.get("FLASK_APP")
     LOGS_LEVEL = logging.INFO
+    CELERY_CONFIG = os.environ.get("CELERY_CONFIG", {})
 
     DB_CONTAINER = os.environ.get("APPLICATION_DB_CONTAINER", "db")
     POSTGRES = {
         "user": os.getenv("APPLICATION_POSTGRES_USER", "postgres"),
-        "pw": os.getenv("APPLICATION_POSTGRES_PW", ""),
+        "pw": os.getenv("APPLICATION_POSTGRES_PW", "postgres"),
         "host": os.getenv("APPLICATION_POSTGRES_HOST", DB_CONTAINER),
         "port": os.getenv("APPLICATION_POSTGRES_PORT", 5432),
         "db": os.getenv("APPLICATION_POSTGRES_DB", "postgres"),
@@ -39,6 +40,7 @@ class TestingConfig(BaseConfig):
     PORT = int(os.getenv("APPLICATION_PORT", "3000"))
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     FLASK_APP = os.environ.get("FLASK_APP")
+    CELERY_CONFIG = os.environ.get("CELERY_CONFIG", {})
 
     DB_CONTAINER = os.environ.get("APPLICATION_DB_CONTAINER_TEST", "testdb")
     POSTGRES = {
