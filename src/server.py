@@ -2,6 +2,7 @@ import logging
 import os
 import sys
 
+from celery import Celery
 from flasgger import Swagger
 from flask import Flask
 from flask.blueprints import Blueprint
@@ -9,11 +10,10 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
-from celery import Celery
-
 import presentation_layer.views as views
 
 ENV = os.environ.get("DEPLOY_ENV", "Development")
+
 
 def create_app(deploy_env: str = ENV) -> Flask:
     server = Flask(__name__)
@@ -71,10 +71,11 @@ def _configure_celery(server: Flask) -> None:
         def __call__(self, *args, **kwargs):
             with server.app_context():
                 return self.run(*args, **kwargs)
-            
+
     celery.Task = ContextTask
     return celery
-    
+
+
 def _configure_logger(server: Flask) -> None:
     logger = logging.getLogger("Kanastra")
     logger.setLevel(server.config["LOGS_LEVEL"])

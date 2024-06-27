@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date
 
 from dataclasses import dataclass
 from pandas import DataFrame
@@ -16,9 +16,13 @@ class Debit:
     debtID: str
 
     @classmethod
-    def insert_debits(self, dataframe: DataFrame, using_repository: DebitRepository) -> int | None:
+    def insert_debits(
+        self, dataframe: DataFrame, using_repository: DebitRepository
+    ) -> int | None:
         return using_repository.insert_debits(dataframe)
-    
+
     @classmethod
-    def get_debit_by_due_date(self, due_date: str, using_repository: DebitRepository) -> list | None:
+    def get_debit_by_due_date(
+        self, due_date: str, using_repository: DebitRepository
+    ) -> list | None:
         return using_repository.get_debit_by_due_date(due_date)

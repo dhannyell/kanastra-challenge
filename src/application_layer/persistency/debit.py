@@ -1,9 +1,10 @@
 import sqlalchemy as db
 
 metadata = db.MetaData()
+
 debit_table = db.Table(
     "debits",
-    metadata, 
+    metadata,
     db.Column("id", db.Integer, nullable=False),
     db.Column("name", db.String(100), nullable=False),
     db.Column("governmentId", db.Integer, nullable=False),

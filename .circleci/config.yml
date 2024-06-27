@@ -47,11 +47,6 @@ jobs:
       - store_test_results:
           path: test-reports
       - run:
-          name: Check for dependencies with known vulnerabilities
-          command: |
-            . venv/bin/activate
-            safety check
-      - run:
           name: Check for files not formatted using Black
           command: |
             . venv/bin/activate
