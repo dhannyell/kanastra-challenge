@@ -1,8 +1,10 @@
-  consumes:
-    - multipart/form-data
-  parameters:
-    - name: file
-      in: formData   # <-----
-      description: The uploaded file data
-      required: true
-      type: file     # <-----
+requestBody:
+  content: 
+    multipart/form-data: # Media type
+      schema:            # Request payload
+        type: object
+        properties:      # Request parts
+          file:  # csv file
+            type: string
+            format: binary
+  
